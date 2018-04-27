@@ -2,14 +2,20 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import linear_model
+import random
 
 def separate(df, train_percent=85):
     npa = df.as_matrix()
-    train_size = int((len(npa)*train_percent)/100)
-    return npa[:train_size], npa[train_size:]
+    test_size = int((len(npa)*(100-train_percent))/100)
+    test = []
+    for elem in range(test_size):
+        chosen = random.randint(0, npa.shape[0]-1)
+        test.append(npa[chosen])
+        np.delete(npa, chosen)
+    return npa, np.array(test)
 
 def fit(features, ground_truth):
-    clf = linear_model.SGDRegressor()
+    clf = linear_model.Perceptron()
     clf.fit(features, ground_truth)
     return clf
 
